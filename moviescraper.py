@@ -69,7 +69,7 @@ def simple_get(url):
     """
     Attempts to get the content at `url` by making an HTTP GET request.
     If the content-type of response is some kind of HTML/XML, return the
-    text content, otherwise return None
+    text content, otherwise return None.
     """
     try:
         with closing(get(url, stream=True)) as resp:
@@ -84,7 +84,7 @@ def simple_get(url):
 
 def is_good_response(resp):
     """
-    Returns true if the response seems to be HTML, false otherwise
+    Returns true if the response seems to be HTML, false otherwise.
     """
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200

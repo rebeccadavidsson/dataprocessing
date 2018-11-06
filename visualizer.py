@@ -2,7 +2,7 @@
 # Name: Rebecca Davidsson
 # Student number: 11252138
 """
-This script visualizes data obtained from a .csv file
+This script visualizes data obtained from a .csv file.
 """
 
 import csv
@@ -38,12 +38,14 @@ def get_mean(key):
 
 def plot(dict):
     """
-    Plots dictionary into a graph
+    Plots dictionary into a graph.
     """
 
+    # Set x-axis and set y-axis values (minimum = 8 and maximum = 9.4)
+    plt.ylim(8, 9.4)
+    plt.title('Average ratings of top 50 movies')
     plt.ylabel('Average rating', fontsize = 18)
     plt.xlabel('Year', fontsize = 18)
-    plt.ylim(8, 9.4)
 
     # Plot a line and bar in the same plot
     plt.plot(dict.keys(), dict.values(), color="red")
@@ -54,7 +56,5 @@ def plot(dict):
 if __name__ == "__main__":
     # Global dictionary for the data
     data_dict = {str(key): get_mean(key) for key in range(START_YEAR, END_YEAR)}
-
-    print(data_dict)
 
     plot(data_dict)
