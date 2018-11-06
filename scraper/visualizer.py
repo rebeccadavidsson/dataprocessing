@@ -7,8 +7,6 @@ This script visualizes data obtained from a .csv file.
 
 import csv
 import matplotlib.pyplot as plt
-import numpy as np
-
 
 # Global constants for the input file, first and last year
 INPUT_CSV = 'movies.csv'
@@ -56,5 +54,4 @@ def plot(dict):
 if __name__ == "__main__":
     # Global dictionary for the data
     data_dict = {str(key): get_mean(key) for key in range(START_YEAR, END_YEAR)}
-
     plot(data_dict)
