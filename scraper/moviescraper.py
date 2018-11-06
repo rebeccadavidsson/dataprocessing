@@ -38,9 +38,9 @@ def extract_movies(dom):
     for row in all_tables:
         title = row.find('h3').a.get_text()
         rating = float(row.find('strong').get_text())
-        year = row.find('span', class_='lister-item-year text-muted unbold').get_text()
-        runtimes = row.find('span', class_='runtime').get_text()
-        actors = row.select('a[href*="adv_li_st_"]')
+        year = row.find(class_='lister-item-year').get_text()
+        runtime = row.find(class_='runtime').get_text()
+        actors = row.select('a[href*="_st_"]')
 
         # Extract numbers from strings
         years = [int(s) for s in re.findall(r'\d+', year)][0]
