@@ -30,7 +30,7 @@ def extract_movies(dom):
     """
 
     # Select relevant data
-    all_tables=dom.find_all('div', class_="lister-item mode-advanced")
+    all_tables = dom.find_all('div', class_="lister-item mode-advanced")
 
     movies = []
 
@@ -50,8 +50,11 @@ def extract_movies(dom):
         names = []
         for actor in actors:
             names.append(actor.get_text())
+        # Ensure the movie lists star actors
+        if names != []:
+            actors = f'{names[0]}, {names[1]}, {names[2]}, {names[3]}'
 
-        movies.append([title, rating, years, names, runtimes])
+        movies.append([title, rating, years, actors, runtimes])
 
     return movies
 
@@ -64,6 +67,7 @@ def save_csv(outfile, movies):
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
     for row in movies:
         writer.writerow(row)
+
 
 def simple_get(url):
     """
