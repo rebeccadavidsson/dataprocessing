@@ -9,6 +9,8 @@ Output is an analyzed .json file.
 import statistics as calc
 import json
 import pandas as pd
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
@@ -62,6 +64,7 @@ def load_data():
     calculate(GDP)
     boxplot(mortality)
     make_json(input, countries, region, density, mortality, GDP)
+    scatterplot(GDP, mortality)
 
 
 def calculate(GDP):
@@ -109,6 +112,17 @@ def make_json(input, countries, region, density, mortality, GDP):
     # Put the dictionary into a json file
     with open('data.json', 'w') as outfile:
         json.dump(json_data, outfile)
+
+
+def scatterplot(GDP, mortality):
+    """
+    Makes a scatterplot of GDP and infant mortality.
+    """
+
+    plt.xlabel('GDP ($ per capita) dollars')
+    plt.ylabel('Infant mortality (per 1000 births)')
+    plt.scatter(GDP, mortality)
+    plt.show()
 
 
 if __name__ == "__main__":
