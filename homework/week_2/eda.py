@@ -9,8 +9,6 @@ Output is an analyzed .json file.
 import statistics as calc
 import json
 import pandas as pd
-import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
@@ -34,7 +32,6 @@ def load_data():
     input = input[input['Pop. Density (per sq. mi.)'] != 'unknown']
 
     # Extract relevant data
-    GDPs = input['GDP ($ per capita) dollars']
     countries = input['Country']
 
     # Take out the word 'dollars', append remaining integers in a list
@@ -62,7 +59,16 @@ def load_data():
             'Infant mortality': mortality,
             'GDP': GDP}
 
-    # Calculate mean, median, mode and standard deviation of GDP
+    calculate(GDP)
+    boxplot(mortality)
+    make_json(input, countries, region, density, mortality, GDP)
+
+
+def calculate(GDP):
+    """
+    Calculate mean, median, mode and standard deviation of GDP.
+    """
+
     print("Mean =", round(calc.mean(GDP), 3))
     print("Median =", calc.median(GDP))
     print("GDP =", calc.mode(GDP))
@@ -73,28 +79,34 @@ def load_data():
     plt.ylabel("Rate", size=14)
     plt.xlabel("Dollars", size=14)
     plt.title("GDP ($ per capita) dollars")
-    # plt.show()
+    plt.show()
 
-    # Make a boxplot using the Five Number Summary
-    mean = round(calc.mean(mortality), 3)
+
+def boxplot(mortality):
+    """
+    Make a boxplot of mortality rates using the Five Number Summary.
+    """
+
     plt.title("Infant mortality (per 1000 births)")
     plt.xlabel(" ")
-    plt.boxplot(mortality)
-    # plt.show()
+    plt.boxplot(mortality, showmeans=True)
+    plt.show()
 
-    df = input.to_json(orient='index')
-    print(df)
 
-    json_data = []
+def make_json(input, countries, region, density, mortality, GDP):
+    """
+    Convert dataframe to a json file.
+    """
+
+    json_data = {}
     for i in range(len(input)):
-        json_data.append(countries.values[i]:
+        json_data.update({countries.values[i]:
                          {'Region:': region[i],
                           'Pop. density': density[i],
                           'Infant mortality (per 1000 births)': mortality[i],
-                          'GDP ($ per capita) dollars': GDP[i]})
+                          'GDP ($ per capita) dollars': GDP[i]}})
 
-
-    # Put the dictionaries into a json file
+    # Put the dictionary into a json file
     with open('data.json', 'w') as outfile:
         json.dump(json_data, outfile)
 
