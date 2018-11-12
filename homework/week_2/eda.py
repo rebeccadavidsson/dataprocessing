@@ -2,11 +2,10 @@
 # Name: Rebecca Davidsson
 # Student number: 11252138
 """
-Exploratory data analysis.
+Exploratory data analysis. Input is a csv file with information of countries.
+Output is an analyzed .json file.
 """
 
-import csv
-import re
 import statistics as calc
 import json
 import pandas as pd
@@ -14,121 +13,90 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-IMPORT_CSV = 'input.csv'
-
 
 def load_data():
-    """
-    Load data into a dataframe.
-    """
+    # Make a pandaframe of data
+    input = pd.read_csv('input.csv')
+    # df = df.drop(df[df.score < 50].index)
 
-    with open(IMPORT_CSV) as input:
-        input = csv.reader(input, delimiter=',')
-        # Skip file header
-        next(input)
+    # Select relevant columns
+    input = input[['Country', 'Region',
+                  'Pop. Density (per sq. mi.)',
+                   'GDP ($ per capita) dollars',
+                   'Infant mortality (per 1000 births)']]
 
-        countries = []
-        regions = []
-        density = []
-        mortality = []
-        GDP = []
+    # Delete empty rows
+    input = input.dropna()
 
-        for row in input:
-            # Skip empty rows
-            if row:
-                countries.append(row[0])
-                regions.append(row[1].strip(" "))
-                density.append(row[4])
+    # Take out unknown figures and outliers
+    input = input[input['GDP ($ per capita) dollars'] != 'unknown']
+    input = input[input['GDP ($ per capita) dollars'] != '400000 dollars']
+    input = input[input['Pop. Density (per sq. mi.)'] != 'unknown']
 
-                # Skip empty fields
-                if row[7]:
-                    mortality_rate = float(str(row[7]).replace(",", "."))
-                else:
-                    mortality_rate = []
-                mortality.append(mortality_rate)
+    # Extract relevant data
+    GDPs = input['GDP ($ per capita) dollars']
+    countries = input['Country']
 
-                GDPs = row[8]
-                # Skip empty fieds
-                GDP_int = [int(s) for s in re.findall(r'\d+', GDPs)]
-                if GDP_int:
-                    GDP_int = GDP_int[0]
-                else:
-                    GDP_int = 0
-                GDP.append(GDP_int)
+    # Take out the word 'dollars', append remaining integers in a list
+    GDP = []
+    for row in input['GDP ($ per capita) dollars']:
+        GDP.append(int(row.split(" ")[0]))
 
-        dict = {'countries': countries,
-                'regions': regions,
-                'Pop. density': density,
-                'Infant mortality': mortality,
-                'GDP': GDP}
+    # Convert density and mortality to float
+    density = []
+    for row in input['Pop. Density (per sq. mi.)']:
+        density.append(float(row.replace(',', '.')))
+    mortality = []
+    for row in input['Infant mortality (per 1000 births)']:
+        mortality.append(float(row.replace(',', '.')))
 
-        # Make a dataframe
-        frame = pd.DataFrame(dict)
+    # Take out extra spaces
+    region = []
+    for row in input['Region']:
+        region.append(row.strip())
 
-        GDPs = ignore_empty_fields(frame.GDP)
-        # print(calc.mean(GDPs))
-        # print(calc.median(GDPs))
-        # print(calc.mode(GDPs))
-        # print(calc.pstdev(GDPs))
+    # Make a dictionary of relevant data
+    dict = {'countries': countries,
+            'regions': region,
+            'Pop. density': density,
+            'Infant mortality': mortality,
+            'GDP': GDP}
 
-        y = GDPs
-        x = get_index_numbers(GDPs)
+    # Calculate mean, median, mode and standard deviation of GDP
+    print("Mean =", round(calc.mean(GDP), 3))
+    print("Median =", calc.median(GDP))
+    print("GDP =", calc.mode(GDP))
+    print("Standard deviation = ", round(calc.pstdev(GDP), 3))
 
-        #plot_data(x, y)
+    # Plot a histogram of GDP
+    plt.hist(GDP)
+    plt.ylabel("Rate", size=14)
+    plt.xlabel("Dollars", size=14)
+    plt.title("GDP ($ per capita) dollars")
+    # plt.show()
 
-        # mortality_rate = ignore_empty_fields(frame.mortality)
-        # print(calc.mean(mortality_rate))
-        # plt.boxplot(mortality_rate)
-        # plt.show()
+    # Make a boxplot using the Five Number Summary
+    mean = round(calc.mean(mortality), 3)
+    plt.title("Infant mortality (per 1000 births)")
+    plt.xlabel(" ")
+    plt.boxplot(mortality)
+    # plt.show()
 
-        data = []
+    df = input.to_json(orient='index')
+    print(df)
 
-        # Make a dictionary for every country
-        for i in range(len(countries)):
-            data.append(json.dumps({countries[i]:
-                        {'Region': regions[i],
-                         'Pop. density': density[i],
-                         'Infant mortality (per 1000 births)': mortality[i],
-                         'GDP ($ per capita) dollars': GDP[i]}},
-                         indent=2))
-
-        # Put the dictionaries into a json file
-        with open('data.json', 'w') as outfile:
-            json.dump(data, outfile)
-
-
-def get_index_numbers(data):
-    """
-    Gets the index numbers for the y-label in a plot.
-    """
-    index = []
-    for i in range(0, len(data)):
-        index.append(i)
-
-    return index
+    json_data = []
+    for i in range(len(input)):
+        json_data.append(countries.values[i]:
+                         {'Region:': region[i],
+                          'Pop. density': density[i],
+                          'Infant mortality (per 1000 births)': mortality[i],
+                          'GDP ($ per capita) dollars': GDP[i]})
 
 
-def ignore_empty_fields(data):
-    """
-    Ignores empty fields in a specific column.
-    """
-    list = []
-    for row in data:
-        if row:
-            list.append(row)
-
-    return list
-
-
-def plot_data(x, y):
-    """
-    Visualize data in a bar graph.
-    """
-    pass
-    plt.bar(x, y)
-    plt.ylabel("dollars", size=14)
-    plt.xlabel("country number", size=14)
-    plt.show()
+    # Put the dictionaries into a json file
+    with open('data.json', 'w') as outfile:
+        json.dump(json_data, outfile)
 
 
 if __name__ == "__main__":
