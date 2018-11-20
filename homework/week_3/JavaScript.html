@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JavaScript opdracht</title>
+</head>
+  <link rel="stylesheet" href="style.css">
+
+    <body>
+       <div class="title">Hours of sunshine per day in De Bilt (01/11/2018  -  15/11/2018)</div>
+       <div class="values"> 0 1 2 3 4 5</div>
+
+      <canvas id="myCanvas" width="500" height="300" style="border:0.5px solid #DCDCDC;"></canvas>
+      <script>
+
+        var fileName = "sun.json";
+        var txtFile = new XMLHttpRequest();
+        txtFile.onreadystatechange = function() {
+            if (txtFile.readyState === 4 && txtFile.status == 200) {
+                // console.log(JSON.parse(txtFile.responseText));
+                var json = JSON.parse(txtFile.responseText);
+                let counter = 0
+                // Size of dataset is used for the x-axis
+                var size = Object.keys(json).length;
+                var max = 90
+
+                function createTransform(domain, range){
+              	// domain is a two-element array of the data bounds [domain_min, domain_max]
+              	// range is a two-element array of the screen bounds [range_min, range_max]
+              	// this gives you two equations to solve:
+              	// range_min = alpha * domain_min + beta
+              	// range_max = alpha * domain_max + beta
+
+                  var domain_min = domain[0]
+                  var domain_max = domain[1]
+                  var range_min = range[0]
+                  var range_max = range[1]
+
+                  // formulas to calculate the alpha and the beta
+                 	var alpha = (range_max - range_min) / (domain_max - domain_min)
+                  var beta = range_max - alpha * domain_max
+
+                  // returns the function for the linear transformation (y= a * x + b)
+                  return function(x){
+                    return alpha * x + beta;
+                  }
+                }
+                // transform x- and y-axis
+                var x_axis = createTransform([0, size - 1], [0, 500]);
+                var y_axis = createTransform([0, max], [300, 0]);
+
+                // Make a new canvas
+                var ctx = document.getElementById('myCanvas').getContext('2d');
+
+                // Add vertical grid
+                ctx.beginPath();
+                var i;
+                for (i = 0; i <= 15; i++) {
+                  ctx.moveTo(x_axis(i), y_axis(0));
+                  ctx.lineTo(x_axis(i), y_axis(max));
+                  ctx.strokeStyle = '#DCDCDC'
+                  // ctx.lineTo(x_axis(i), y_axis(1.5));
+
+                }
+                ctx.stroke();
+                ctx.closePath();
+
+                // Add horizontal grid and numbers
+                ctx.beginPath();
+                var i;
+                for (i = 0; i <= 90; i = i + (max / size)) {
+                  ctx.moveTo(x_axis(0), y_axis(i));
+                  ctx.fillText(y_axis(i), x_axis(0), y_axis(i));
+                  ctx.lineTo(x_axis(300), y_axis(i));
+                }
+                ctx.stroke();
+                ctx.closePath();
+
+
+                // Set begining of path outside the for-loop where the line is made
+                ctx.beginPath();
+                ctx.moveTo(0, 300);
+
+                // Iterate over the json file to get every key and value
+                Object.keys(json).forEach(function(key) {
+
+                var date = key
+                var value = json[key]
+
+                // Define x-coördate and y-coördinate of specific key and value
+                var x = x_axis(counter)
+                var y = y_axis(value)
+                console.log(x,y);
+
+                // Move current line to the transformed coördinates
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = 'blue'
+
+
+                // Counter for ticks on x-axis
+                counter = counter + 1
+              })
+              ctx.stroke();
+
+            }
+        }
+
+        txtFile.open("GET", fileName);
+        txtFile.send();
+
+
+      </script>
+
+    </body>
+
+</html>
