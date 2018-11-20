@@ -7,10 +7,9 @@
   <link rel="stylesheet" href="style.css">
 
     <body>
-       <div class="title">Hours of sunshine per day in De Bilt (01/11/2018  -  15/11/2018)</div>
-       <div class="values"> 0 1 2 3 4 5</div>
+       <div class="title"> Percentage of longest possible sunshine in De Bilt (01/11/2018  -  15/11/2018)</div>
 
-      <canvas id="myCanvas" width="500" height="300" style="border:0.5px solid #DCDCDC;"></canvas>
+      <canvas id="myCanvas" width="500" height="300" ></canvas>
       <script>
 
         var fileName = "sun.json";
@@ -46,61 +45,90 @@
                   }
                 }
                 // transform x- and y-axis
-                var x_axis = createTransform([0, size - 1], [0, 500]);
-                var y_axis = createTransform([0, max], [300, 0]);
+                var x_axis = createTransform([0, size - 1], [40, 480]);
+                var y_axis = createTransform([0, max], [250, 0]);
 
                 // Make a new canvas
                 var ctx = document.getElementById('myCanvas').getContext('2d');
 
-                // Add vertical grid
+                // Add horizontal grid
                 ctx.beginPath();
                 var i;
                 for (i = 0; i <= 15; i++) {
                   ctx.moveTo(x_axis(i), y_axis(0));
-                  ctx.lineTo(x_axis(i), y_axis(max));
+                  // ctx.lineTo(x_axis(i), y_axis(max));
                   ctx.strokeStyle = '#DCDCDC'
-                  // ctx.lineTo(x_axis(i), y_axis(1.5));
+                  ctx.lineTo(x_axis(i), y_axis(2));
+                  ctx.stroke();
+                  ctx.closePath();
 
                 }
-                ctx.stroke();
-                ctx.closePath();
 
-                // Add horizontal grid and numbers
+                // Add vertical grid
                 ctx.beginPath();
                 var i;
-                for (i = 0; i <= 90; i = i + (max / size)) {
+                for (i = max; i >= 0; i = i - (max / size)) {
                   ctx.moveTo(x_axis(0), y_axis(i));
-                  ctx.fillText(y_axis(i), x_axis(0), y_axis(i));
+                  // ctx.fillText(y_axis(i), x_axis(0), y_axis(i));
                   ctx.lineTo(x_axis(300), y_axis(i));
+                  ctx.stroke();
+                  ctx.closePath();
                 }
-                ctx.stroke();
-                ctx.closePath();
 
 
                 // Set begining of path outside the for-loop where the line is made
                 ctx.beginPath();
-                ctx.moveTo(0, 300);
 
                 // Iterate over the json file to get every key and value
                 Object.keys(json).forEach(function(key) {
-
                 var date = key
                 var value = json[key]
 
                 // Define x-coördate and y-coördinate of specific key and value
                 var x = x_axis(counter)
                 var y = y_axis(value)
-                console.log(x,y);
 
                 // Move current line to the transformed coördinates
                 ctx.lineTo(x, y);
+                ctx.fillText(value, x, y)
                 ctx.strokeStyle = 'blue'
-
+                ctx.stroke();
 
                 // Counter for ticks on x-axis
                 counter = counter + 1
               })
-              ctx.stroke();
+
+              var i = 0;
+              var j = max
+              ctx.moveTo(x_axis(0), y_axis(0));
+
+              // Iterate over the json file to get every key and value
+              Object.keys(json).forEach(function(key) {
+              var date = key
+
+              // Add numbers to the x-axis
+              ctx.moveTo(x_axis(i), y_axis(0));
+              ctx.fillText(date, x_axis(i - 0.1), y_axis(-5));
+
+              i = i + 1
+
+              })
+
+              i = max
+              Object.keys(json).forEach(function(key) {
+
+              // Add numbers to the y-axis
+              ctx.moveTo(x_axis(0), y_axis(i));
+              ctx.fillText(i, x_axis(-0.5), y_axis(i));
+
+              i = i - (max/size)
+
+              })
+
+              ctx.fillText("days from 01/11/18 until 15/11/18", x_axis(9), y_axis(-10));
+              ctx.rotate(-Math.PI/2);
+              ctx.textAlign = "center";
+              ctx.fillText("Percentage", x_axis(-2), y_axis(max - 5));
 
             }
         }
