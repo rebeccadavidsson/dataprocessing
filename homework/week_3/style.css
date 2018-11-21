@@ -4,6 +4,7 @@ canvas {
     width: 400;
     height: 400;
     position: relative;
+    border-radius: 10px;
     top: 40px;
     left: 100px;
 }

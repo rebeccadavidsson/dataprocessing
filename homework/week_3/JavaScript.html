@@ -6,22 +6,24 @@
 </head>
   <link rel="stylesheet" href="style.css">
 
-    <body>
+    <body style="background-color:#DCDCDC;">
        <div class="title"> Percentage of longest possible sunshine in De Bilt (01/11/2018  -  15/11/2018)</div>
 
-      <canvas id="myCanvas" width="500" height="300" ></canvas>
+      <canvas id="myCanvas" width="630" height="350" style="background-color:silver;"></canvas>
       <script>
 
         var fileName = "sun.json";
         var txtFile = new XMLHttpRequest();
         txtFile.onreadystatechange = function() {
             if (txtFile.readyState === 4 && txtFile.status == 200) {
-                // console.log(JSON.parse(txtFile.responseText));
                 var json = JSON.parse(txtFile.responseText);
-                let counter = 0
+
                 // Size of dataset is used for the x-axis
                 var size = Object.keys(json).length;
-                var max = 90
+                var max = 100
+                var height = 300
+                var width = 600
+                var counter = 0
 
                 function createTransform(domain, range){
               	// domain is a two-element array of the data bounds [domain_min, domain_max]
@@ -45,36 +47,32 @@
                   }
                 }
                 // transform x- and y-axis
-                var x_axis = createTransform([0, size - 1], [40, 480]);
-                var y_axis = createTransform([0, max], [250, 0]);
+                var x_axis = createTransform([0, size - 1], [40, width]);
+                var y_axis = createTransform([0, max], [height, 20]);
 
                 // Make a new canvas
                 var ctx = document.getElementById('myCanvas').getContext('2d');
 
-                // Add horizontal grid
+                // Add vertical ticks
                 ctx.beginPath();
                 var i;
                 for (i = 0; i <= 15; i++) {
                   ctx.moveTo(x_axis(i), y_axis(0));
-                  // ctx.lineTo(x_axis(i), y_axis(max));
                   ctx.strokeStyle = '#DCDCDC'
-                  ctx.lineTo(x_axis(i), y_axis(2));
+                  ctx.lineTo(x_axis(i), y_axis(2.5));
                   ctx.stroke();
                   ctx.closePath();
-
                 }
 
-                // Add vertical grid
+                // Add horizontal grid
                 ctx.beginPath();
                 var i;
-                for (i = max; i >= 0; i = i - (max / size)) {
+                for (i = max; i >= 0; i = i - 10) {
                   ctx.moveTo(x_axis(0), y_axis(i));
-                  // ctx.fillText(y_axis(i), x_axis(0), y_axis(i));
-                  ctx.lineTo(x_axis(300), y_axis(i));
+                  ctx.lineTo(x_axis(size - 1), y_axis(i));
                   ctx.stroke();
                   ctx.closePath();
                 }
-
 
                 // Set begining of path outside the for-loop where the line is made
                 ctx.beginPath();
@@ -83,10 +81,11 @@
                 Object.keys(json).forEach(function(key) {
                 var date = key
                 var value = json[key]
+                console.log(date, value)
 
                 // Define x-coördate and y-coördinate of specific key and value
                 var x = x_axis(counter)
-                var y = y_axis(value)
+                var y = y_axis(json[key])
 
                 // Move current line to the transformed coördinates
                 ctx.lineTo(x, y);
@@ -94,49 +93,41 @@
                 ctx.strokeStyle = 'blue'
                 ctx.stroke();
 
-                // Counter for ticks on x-axis
                 counter = counter + 1
+
               })
-
-              var i = 0;
-              var j = max
-              ctx.moveTo(x_axis(0), y_axis(0));
-
-              // Iterate over the json file to get every key and value
-              Object.keys(json).forEach(function(key) {
-              var date = key
 
               // Add numbers to the x-axis
+              for (i = 1; i <= size; i++) {
               ctx.moveTo(x_axis(i), y_axis(0));
-              ctx.fillText(date, x_axis(i - 0.1), y_axis(-5));
-
-              i = i + 1
-
-              })
-
-              i = max
-              Object.keys(json).forEach(function(key) {
+              var date = [i] + '/11'
+              ctx.fillText(date, x_axis(i - 1.2), y_axis(-5));
+              }
 
               // Add numbers to the y-axis
+              for (i = max; i >= 0; i = i - 10) {
               ctx.moveTo(x_axis(0), y_axis(i));
-              ctx.fillText(i, x_axis(-0.5), y_axis(i));
+              ctx.fillText(i, x_axis(-0.4), y_axis(i));
+              }
 
-              i = i - (max/size)
-
-              })
-
-              ctx.fillText("days from 01/11/18 until 15/11/18", x_axis(9), y_axis(-10));
+              // Position x- and y-axis titles
+              ctx.fillText("days from 01/11/18 until 15/11/18", x_axis(size - 5), y_axis(-12));
               ctx.rotate(-Math.PI/2);
               ctx.textAlign = "center";
-              ctx.fillText("Percentage", x_axis(-2), y_axis(max - 5));
-
+              ctx.fillText("Percentage", x_axis(-2), y_axis(max + 1));
             }
-        }
 
+        }
         txtFile.open("GET", fileName);
         txtFile.send();
+      </script>
 
-
+      <p id="click">
+      <script>
+      document.addEventListener("click", myFunction);
+        function myFunction() {
+            alert ("This is a line chart of the percentage of longest possible sunshine in De Bilt (01/11/2018 - 15/11/2018). Data is provided by KNMI.nl ");
+        }
       </script>
 
     </body>
