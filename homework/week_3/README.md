@@ -5,13 +5,8 @@ Student number: 11252138
 
 ## Structure
 
-The website can be opened by running a local server on:
-
-```
-python -m http.server 8080
-```
-
-and open 'index.html'.
+The website can be opened with:
+https://github.com/rebeccadavidsson/dataprocessing/tree/master/homework/week_3
 
 ## Data
 
