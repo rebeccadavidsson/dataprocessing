@@ -1,4 +1,4 @@
-canvas {
+.canvas {
     padding: 0;
     margin: auto;
     width: 400;
@@ -8,10 +8,35 @@ canvas {
     top: 40px;
     left: 100px;
 }
-      /* Bottom left text */
+
 .title {
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
     top: 20px;
     left: 100px;
+}
+
+.foot {
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    top: 40px;
+    left: 365px;
+}
+
+.foot2 {
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    top: 40px;
+    left: 340px;
+}
+
+.foot3 {
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    top: 50px;
+    left: 380px;
 }

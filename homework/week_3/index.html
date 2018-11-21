@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,12 +6,12 @@
   <link rel="stylesheet" href="style.css">
 
     <body style="background-color:#DCDCDC;">
-       <div class="title"> Percentage of longest possible sunshine in De Bilt (01/11/2018  -  15/11/2018)</div>
+       <div class="title"> Percentage of longest possible sunshine in De Bilt (01/10/2018 - 15/10/2018 and 01/11/2018 - 15/11/2018)</div>
 
-      <canvas id="myCanvas" width="630" height="350" style="background-color:silver;"></canvas>
+      <canvas class="canvas" id="myCanvas" width="640" height="360" style="background-color:silver;"></canvas>
       <script>
 
-        var fileName = "sun.json";
+        var fileName = "data.json";
         var txtFile = new XMLHttpRequest();
         txtFile.onreadystatechange = function() {
             if (txtFile.readyState === 4 && txtFile.status == 200) {
@@ -52,11 +51,12 @@
 
                 // Make a new canvas
                 var ctx = document.getElementById('myCanvas').getContext('2d');
+                ctx.font=" bold 9px Arial";
 
                 // Add vertical ticks
                 ctx.beginPath();
                 var i;
-                for (i = 0; i <= 15; i++) {
+                for (i = 0; i <= size; i++) {
                   ctx.moveTo(x_axis(i), y_axis(0));
                   ctx.strokeStyle = '#DCDCDC'
                   ctx.lineTo(x_axis(i), y_axis(2.5));
@@ -77,46 +77,90 @@
                 // Set begining of path outside the for-loop where the line is made
                 ctx.beginPath();
 
-                // Iterate over the json file to get every key and value
+                // Iterate over the json file to get every key and value of oktober
                 Object.keys(json).forEach(function(key) {
                 var date = key
-                var value = json[key]
-                console.log(date, value)
+                var value = json[key]['oktober']
 
                 // Define x-coördate and y-coördinate of specific key and value
                 var x = x_axis(counter)
-                var y = y_axis(json[key])
+                var y = y_axis(json[key]['oktober'])
 
                 // Move current line to the transformed coördinates
                 ctx.lineTo(x, y);
-                ctx.fillText(value, x, y)
                 ctx.strokeStyle = 'blue'
                 ctx.stroke();
+
+                // Draw the value on current location of the line
+                ctx.fillText(value, x, y)
 
                 counter = counter + 1
 
               })
+              ctx.closePath();
 
-              // Add numbers to the x-axis
-              for (i = 1; i <= size; i++) {
-              ctx.moveTo(x_axis(i), y_axis(0));
-              var date = [i] + '/11'
-              ctx.fillText(date, x_axis(i - 1.2), y_axis(-5));
-              }
+              // Begin new path for data of november
+              ctx.beginPath();
+              counter = 0;
 
-              // Add numbers to the y-axis
-              for (i = max; i >= 0; i = i - 10) {
-              ctx.moveTo(x_axis(0), y_axis(i));
-              ctx.fillText(i, x_axis(-0.4), y_axis(i));
-              }
+              // Iterate over the json file to get every key and value of november
+              Object.keys(json).forEach(function(key) {
+              var date = key
+              var value = json[key]['november']
 
-              // Position x- and y-axis titles
-              ctx.fillText("days from 01/11/18 until 15/11/18", x_axis(size - 5), y_axis(-12));
-              ctx.rotate(-Math.PI/2);
-              ctx.textAlign = "center";
-              ctx.fillText("Percentage", x_axis(-2), y_axis(max + 1));
+              // Define x-coördate and y-coördinate of specific key and value
+              var x = x_axis(counter)
+              var y = y_axis(json[key]['november'])
+
+              // Move current line to the transformed coördinates
+              ctx.lineTo(x, y);
+              ctx.strokeStyle = 'purple'
+              ctx.stroke();
+
+              // Draw the value on current location of the line
+              ctx.fillText(value, x, y)
+
+              counter = counter + 1
+
+            })
+            ctx.closePath();
+
+            // Add numbers to the x-axis
+            for (i = 1; i <= size; i++) {
+            ctx.moveTo(x_axis(i), y_axis(0));
+            var date = 'day ' + [i];
+            ctx.fillText(date, x_axis(i - 1.2), y_axis(-5));
+            ctx.resetTransform();
             }
 
+            // Add numbers to the y-axis
+            for (i = max; i >= 0; i = i - 10) {
+            ctx.moveTo(x_axis(0), y_axis(i));
+            ctx.fillText(i, x_axis(-0.4), y_axis(i));
+            }
+
+            // Position legenda lines
+            ctx.beginPath();
+            ctx.moveTo(x_axis(8), y_axis(-11))
+            ctx.lineTo(x_axis(9.5), y_axis(-11))
+            ctx.lineWidth=3;
+            ctx.strokeStyle='purple';
+            ctx.stroke();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(x_axis(8), y_axis(-16))
+            ctx.lineTo(x_axis(9.5), y_axis(-16))
+            ctx.strokeStyle='blue';
+            ctx.stroke();
+
+            // Position x- and y-axis titles
+            ctx.fillText("October: days from 01/10/18 until 15/11/18", x_axis(size - 5), y_axis(-12));
+            ctx.fillText("November: days from 01/11/18 until 15/11/18", x_axis(size - 5), y_axis(-17));
+            ctx.rotate(-Math.PI/2);
+            ctx.textAlign = "center";
+            ctx.fillText("Percentage", x_axis(-2), y_axis(max + 1));
+
+          }
         }
         txtFile.open("GET", fileName);
         txtFile.send();
@@ -126,10 +170,12 @@
       <script>
       document.addEventListener("click", myFunction);
         function myFunction() {
-            alert ("This is a line chart of the percentage of longest possible sunshine in De Bilt (01/11/2018 - 15/11/2018). Data is provided by KNMI.nl ");
+            alert ("This is a line chart of the percentage of longest possible sunshine in De Bilt (01/10/2018 - 15/10/2018 and 01/11/2018 - 15/11/2018). Data is provided by KNMI.nl ");
         }
       </script>
-
+      <div class="foot">Rebecca Davidsson, 11252138</div>
+      <div class="foot2"> Minor Programmeren, Data Processing 2018</div>
+      <a class="foot3" href="http://projects.knmi.nl/klimatologie/daggegevens/selectie.cgi">KNMI Klimatologie</a>
     </body>
 
 </html>
