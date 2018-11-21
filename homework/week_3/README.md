@@ -6,7 +6,7 @@ Student number: 11252138
 ## Structure
 
 The website can be opened with:
-https://github.com/rebeccadavidsson/dataprocessing/tree/master/homework/week_3
+https://rebeccadavidsson.github.io/dataprocessing/homework/week_3/
 
 ## Data
 
