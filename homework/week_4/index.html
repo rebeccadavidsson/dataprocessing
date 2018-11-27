@@ -8,7 +8,6 @@
 </head>
 <body style="background-color:#DCDCDC;">
   <script type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
   <script>
     // Add header text
     d3.select("body")
@@ -58,15 +57,6 @@
                       .scale(yScale)
                       .orient("left");
 
-    // Show a value of a specific bar while clicking on the bar
-    var tip = d3.tip()
-                .attr("class", "d3-tip")
-                .offset([-8, 0])
-                .html(function(d) {
-                  return "<span style='color:white'>" + d + "</span>";
-                })
-    svg.call(tip);
-
     // Create a rect element for each value
     svg.selectAll("rect")
   			   .data(dataset)
@@ -83,8 +73,6 @@
   			   		return d * barHeight;
   			   })
            .attr("fill", "#960018")
-           .on('mousedown', tip.show)
-           .on('mouseup', tip.hide)
            // Source: http://bl.ocks.org/phil-pedruco/9032348
            .on("mouseover", function() {
                 d3.select(this)
