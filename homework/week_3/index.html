@@ -46,8 +46,8 @@
                   }
                 }
                 // transform x- and y-axis
-                var x_axis = createTransform([0, size - 1], [40, width]);
-                var y_axis = createTransform([0, max], [height, 20]);
+                var xAxis = createTransform([0, size - 1], [40, width]);
+                var yAxis = createTransform([0, max], [height, 20]);
 
                 // Make a new canvas
                 var ctx = document.getElementById('myCanvas').getContext('2d');
@@ -57,9 +57,9 @@
                 ctx.beginPath();
                 var i;
                 for (i = 0; i <= size; i++) {
-                  ctx.moveTo(x_axis(i), y_axis(0));
+                  ctx.moveTo(xAxis(i), yAxis(0));
                   ctx.strokeStyle = '#DCDCDC'
-                  ctx.lineTo(x_axis(i), y_axis(2.5));
+                  ctx.lineTo(xAxis(i), yAxis(2.5));
                   ctx.stroke();
                   ctx.closePath();
                 }
@@ -68,8 +68,8 @@
                 ctx.beginPath();
                 var i;
                 for (i = max; i >= 0; i = i - 10) {
-                  ctx.moveTo(x_axis(0), y_axis(i));
-                  ctx.lineTo(x_axis(size - 1), y_axis(i));
+                  ctx.moveTo(xAxis(0), yAxis(i));
+                  ctx.lineTo(xAxis(size - 1), yAxis(i));
                   ctx.stroke();
                   ctx.closePath();
                 }
@@ -83,8 +83,8 @@
                 var value = json[key]['oktober']
 
                 // Define x-coördate and y-coördinate of specific key and value
-                var x = x_axis(counter)
-                var y = y_axis(json[key]['oktober'])
+                var x = xAxis(counter)
+                var y = yAxis(json[key]['oktober'])
 
                 // Move current line to the transformed coördinates
                 ctx.lineTo(x, y);
@@ -109,8 +109,8 @@
               var value = json[key]['november']
 
               // Define x-coördate and y-coördinate of specific key and value
-              var x = x_axis(counter)
-              var y = y_axis(json[key]['november'])
+              var x = xAxis(counter)
+              var y = yAxis(json[key]['november'])
 
               // Move current line to the transformed coördinates
               ctx.lineTo(x, y);
@@ -127,39 +127,38 @@
 
             // Add numbers to the x-axis
             for (i = 1; i <= size; i++) {
-            ctx.moveTo(x_axis(i), y_axis(0));
+            ctx.moveTo(xAxis(i), yAxis(0));
             var date = 'day ' + [i];
-            ctx.fillText(date, x_axis(i - 1.2), y_axis(-5));
+            ctx.fillText(date, xAxis(i - 1.2), yAxis(-5));
             ctx.resetTransform();
             }
 
             // Add numbers to the y-axis
             for (i = max; i >= 0; i = i - 10) {
-            ctx.moveTo(x_axis(0), y_axis(i));
-            ctx.fillText(i, x_axis(-0.4), y_axis(i));
+            ctx.moveTo(xAxis(0), yAxis(i));
+            ctx.fillText(i, xAxis(-0.4), yAxis(i));
             }
 
             // Position legenda lines
             ctx.beginPath();
-            ctx.moveTo(x_axis(8), y_axis(-11))
-            ctx.lineTo(x_axis(9.5), y_axis(-11))
+            ctx.moveTo(xAxis(8), yAxis(-11))
+            ctx.lineTo(xAxis(9.5), yAxis(-11))
             ctx.lineWidth=3;
             ctx.strokeStyle='purple';
             ctx.stroke();
             ctx.closePath();
             ctx.beginPath();
-            ctx.moveTo(x_axis(8), y_axis(-16))
-            ctx.lineTo(x_axis(9.5), y_axis(-16))
+            ctx.moveTo(xAxis(8), yAxis(-16))
+            ctx.lineTo(xAxis(9.5), yAxis(-16))
             ctx.strokeStyle='blue';
             ctx.stroke();
 
             // Position x- and y-axis titles
-            ctx.fillText("October: days from 01/10/18 until 15/11/18", x_axis(size - 5), y_axis(-12));
-            ctx.fillText("November: days from 01/11/18 until 15/11/18", x_axis(size - 5), y_axis(-17));
+            ctx.fillText("October: days from 01/10/18 until 15/11/18", xAxis(size - 5), yAxis(-12));
+            ctx.fillText("November: days from 01/11/18 until 15/11/18", xAxis(size - 5), yAxis(-17));
             ctx.rotate(-Math.PI/2);
             ctx.textAlign = "center";
-            ctx.fillText("Percentage", x_axis(-2), y_axis(max + 1));
-
+            ctx.fillText("Percentage", xAxis(-2), yAxis(max + 1));
           }
         }
         txtFile.open("GET", fileName);
