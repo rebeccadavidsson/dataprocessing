@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>D3 Barchart</title>
+  <script type="text/javascript" src="d3/d3.v3.js"></script>
+  <link rel='stylesheet' href='style.css'>
+</head>
+<body style="background-color:#DCDCDC;">
+  <script type="text/javascript"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <script>
+    // Add header text
+    d3.select("body")
+      .append("h1")
+      .text("Beer consumed in litres per person over the years 1850 - 1954 in the USA.")
+      .append("p")
+      .text("Name: Rebecca Davidsson, student number: 11252138")
+      .append("p")
+      .text("Click on any bar for more information.");
+
+    //Width and height
+    var w = 900;
+    var h = 200;
+    var barHeight = 20;
+    var barPadding = 3;
+    var xPadding = 20
+    var xoffSet = 10;
+
+    // Load data; return every variable in the column "Beer (litres per person)"
+    d3.csv("alcohol.csv", function(error, data) {
+      var dataset = data.map(function(d) {return d["Beer (litres per person)"];
+        });
+      var years = data.map(function(d) {return d["Year"];
+        });
+
+    // Create SVG element
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h);
+
+    // Make a linear xScale and yScale
+    var xScale = d3.scale.linear()
+                         .domain(years)
+    var yScale = d3.scale.linear()
+                          .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                          .range([0, h]);
+
+    // Make the x- and y-axis
+    var xAxis = d3.svg.axis()
+                      .scale(xScale)
+                      .tickFormat(function(d) {return years[d]; })
+                      .tickPadding(5)
+                      .orient("bottom")
+                      .ticks(dataset.length);
+    var yAxis = d3.svg.axis()
+                      .scale(yScale)
+                      .orient("left");
+
+    // Show a value of a specific bar while clicking on the bar
+    var tip = d3.tip()
+                .attr("class", "d3-tip")
+                .offset([-8, 0])
+                .html(function(d) {
+                  return "<span style='color:white'>" + d + "</span>";
+                })
+    svg.call(tip);
+
+    // Create a rect element for each value
+    svg.selectAll("rect")
+  			   .data(dataset)
+  			   .enter()
+  			   .append("rect")
+  			   .attr("x", function(d, i) {
+  			   		return i * (w / dataset.length - 1) + xPadding * 2;
+  			   })
+  			   .attr("y", function(d) {
+  			   		return h - (d * barHeight) - xPadding;
+  			   })
+  			   .attr("width", w / dataset.length - barPadding)
+  			   .attr("height", function(d) {
+  			   		return d * barHeight;
+  			   })
+           .attr("fill", "#960018")
+           .on('mousedown', tip.show)
+           .on('mouseup', tip.hide)
+           // Source: http://bl.ocks.org/phil-pedruco/9032348
+           .on("mouseover", function() {
+                d3.select(this)
+                	.attr("fill", "#CD5C5C");
+            })
+            .on("mouseout", function(d, i) {
+                d3.select(this).attr("fill", function() {
+                    return "" + "#960018" + "";
+                });
+            });
+
+      // Get domain of y- and x-axis
+      xScale.domain([0, dataset.length - 1]);
+      xScale.range([xPadding + xoffSet, w - xPadding - xoffSet])
+      yScale.domain([dataset.length/4, 0]);
+      yScale.range([0, h - xPadding])
+
+      // Append a group element for the x-axis
+      svg.append("g")
+         .attr("class", "xAxis")
+         .attr("transform", "translate(20,180)")
+         .call(xAxis);
+      // Append a group element for the y-axis
+      svg.append("g")
+         .attr("class", "yAxis")
+         .attr("transform", "translate(40,0)")
+         .call(yAxis);
+
+      // text label for the y axis
+      svg.append("text")
+          .attr("class", "text")
+          .attr("transform","rotate(-90,25,15)")
+          .style("text-anchor", "middle")
+          .text("Litres per person");
+
+    })
+  </script>
+</body>
+</html>
