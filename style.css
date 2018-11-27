@@ -1,0 +1,49 @@
+h1 {
+  color: #696969;
+  font: 19px Arial;
+  text-align: left;
+}
+
+p {
+  color: #696969;
+  font: 10px Arial;
+  text-align: left;
+}
+
+div.bar {
+  display: inline-block;
+  width: 5px;
+  height: 75px;
+  margin-right: 2px;
+  background-color: #960018;
+}
+
+.xAxis {
+  font: 9px Arial;
+  fill: none;
+  stroke: #000;
+}
+
+.xAxis path {
+  display: none;
+}
+
+.yAxis {
+  font: 10px Arial;
+  fill: none;
+  stroke: #000;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  font: 10px Arial;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.text {
+  font: 10px Arial;
+}
