@@ -1,0 +1,27 @@
+h1 {
+  color: black;
+  font: 19px Arial;
+  text-align: left;
+}
+
+p {
+  color: black;
+  font: 10px Arial;
+  text-align: left;
+}
+
+body {
+  background-color: gainsboro;
+}
+
+svg {
+  background-color: gainsboro;
+}
+
+.text {
+  font: 9px Arial;
+}
+
+.legend {
+  font: 14px Arial;
+}
