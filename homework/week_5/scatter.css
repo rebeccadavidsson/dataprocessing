@@ -1,11 +1,11 @@
 h1 {
-  color: black;
+  color: grey;
   font: 19px Arial;
   text-align: left;
 }
 
 p {
-  color: black;
+  color: grey;
   font: 10px Arial;
   text-align: left;
 }
@@ -24,4 +24,17 @@ svg {
 
 .legend {
   font: 14px Arial;
+}
+
+.title {
+  font: 14px Arial;
+}
+
+.update {
+  fill: #333;
+}
+
+.links {
+  color: grey;
+  font: 11px Arial;
 }
