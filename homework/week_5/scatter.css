@@ -36,5 +36,6 @@ svg {
 
 .links {
   color: grey;
-  font: 11px Arial;
+  text-decoration: underline;
+  font: 12px Arial;
 }
