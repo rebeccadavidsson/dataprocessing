@@ -1,21 +1,24 @@
 h1 {
-  color: grey;
-  font: 19px Arial;
+  color: dimgray;
+  font: 24px Arial;
   text-align: left;
 }
 
 p {
-  color: grey;
-  font: 10px Arial;
+  color: dimgray;
+  font: 14px Arial;
   text-align: left;
 }
 
+
 body {
   background-color: gainsboro;
+  background: -webkit-gradient(linear, left top, left bottom, from(silver), to(#fff)) fixed;
 }
 
 svg {
   background-color: gainsboro;
+  background: -webkit-gradient(linear, left top, left bottom, from(silver), to(#fff)) fixed;
 }
 
 .text {
@@ -30,12 +33,22 @@ svg {
   font: 14px Arial;
 }
 
-.update {
-  fill: #333;
+.links {
+  text-decoration: underline;
+  font: 14px Arial;
 }
 
-.links {
-  color: grey;
-  text-decoration: underline;
-  font: 12px Arial;
+.countryname {
+  opacity: 0.2;
+  font: 25px Arial;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  font: 10px Arial;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
 }
