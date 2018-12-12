@@ -1,3 +1,8 @@
+/* html {
+  width: 80%;
+  height: 80%;
+} */
+
 
 * {
   padding:0;
@@ -27,11 +32,26 @@ svg {
   display: inline;
 }
 
+.circlesvg {
+  background: #efefef;
+}
+
 footer {
   background-color: #777;
   padding: 10px;
   text-align: center;
   color: white;
+}
+
+.footer2 {
+  background-color: rgb(48,48,48);
+  padding: 15px;
+  text-align:right;
+  padding-left: 0px;
+  color: white;
+  width: 100%;
+  position:fixed;
+  bottom: 0px;
 }
 
 .yAxis {
@@ -103,28 +123,28 @@ pointer-events: none;
   left: 100%;
 }
 
+
 .details{
   color:white;
 }
 
 .innercircle {
-  color: grey;
   font-size: 30px;
 }
 
 .cirlcetitle {
   color: grey;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .max {
-  color: grey;
+  fill: grey;
   font-size: 10px;
 }
 
 .countryname {
-  color: grey;
-  font-size: 35px;
+  fill: silver;
+  font-size: 45px;
   float: right;
-
 }

@@ -1,5 +1,5 @@
 """
-This script adds data from a CSV file to an existing TSV-file.
+This script adds selected data from a CSV file to an existing TSV-file.
 Name: Rebecca Davidsson, student number: 11252138.
 """
 
