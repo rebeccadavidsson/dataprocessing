@@ -67,8 +67,6 @@ function onload(){
     var hpiById = {};
     var hpiDict = {};
 
-
-
     // Make a dictionary of all categories
     hpi.forEach(function(d) { hpiDict[d.name] = ({"Wellbeing" : parseFloat(d["Wellbeing"]),
                                     "Life Expectancy" : parseFloat(d["Life Expectancy"]),
@@ -131,18 +129,18 @@ function onload(){
           })
           .on("mousedown", function(d) {
             try {
-              console.log(hpiDict);
               update(d.properties.name, "HPI", hpiDict)
-              // update(d.properties.name, "Life Expectancy", hpiDict)
               update(d.properties.name, "Inequality", hpiDict)
               update(d.properties.name, "Wellbeing", hpiDict);
             }
             catch(err) {
               d3.selectAll("#countryname").remove()
               addCountryName("Uknown HPI")
+              d3.selectAll("#HPI").style("fill-opacity", 0)
+              d3.selectAll("#Inequality").style("fill-opacity", 0)
+              d3.selectAll("#Wellbeing").style("fill-opacity", 0)
             }
           });
-
 
     svg.append("path")
         .datum(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
@@ -166,12 +164,11 @@ function onload(){
     }
 
     /*
-    Makes the 4 donuts when html is opened.
+    Makes the 3 donuts when html is opened.
     */
     function makeInitialDonuts(country) {
 
     drawDonut(country, hpiDict, "HPI", "firebrick", calcAverage("HPI", hpiDict))
-    // drawDonut(country, hpiDict, "Life Expectancy", "lightcoral", calcAverage("Life Expectancy", hpiDict))
     drawDonut(country, hpiDict, "Inequality", "crimson", calcAverage("Inequality", hpiDict))
     drawDonut(country, hpiDict, "Wellbeing", "palevioletred", calcAverage("Wellbeing", hpiDict))
 
@@ -182,8 +179,9 @@ function onload(){
     // Start with data of the Finland when html is opened :-)
     makeInitialDonuts("Finland")
 
-
-
+    /*
+    Updates the three donuts when user clicks on a country.
+    */
     function update(country, category, data){
 
 
@@ -219,10 +217,7 @@ function onload(){
               .range([col, "#E5E4E4"])
 
       var dataset = data[country][category]
-      console.log(dataset);
       data = [dataset, max - dataset]
-
-      console.log(data);
 
       // Remove old countryname and draw a new one
       d3.selectAll("#countryname").remove()
@@ -233,6 +228,8 @@ function onload(){
 
       // Select donut by category
       var donut = d3.selectAll("#" + category)
+                    .style("fill-opacity", 1)
+
       donut.append("text")
             .attr("id", "innerText" + category)
         	   .attr("text-anchor", "middle")
@@ -255,8 +252,6 @@ function onload(){
             .data(pie(data))
             .transition()
             .duration(1000)
-            // .enter()
-            // .append('path')
             .attr('d', arc)
             .attr("fill", function(d,i) {
             	return color(i);
@@ -375,12 +370,16 @@ function onload(){
                 .append("svg")
                 .attr("id", category)
                 .attr("class", "circlesvg")
+                .style("fill-opacity", 0.4)
                 .attr("width", width)
-                .attr("height", height);
+                .attr("height", height)
+                .attr("transform", "translate(" + 10 + "," + 10 + ")");
+
 
     var tool_tip = d3.tip()
-            .attr("class", "d3-tip")
-            .offset([0, -10])
+            .attr("class", "average")
+            // .offset([200, -10])
+            .direction('w')
             .html(function(d) { return "Average " + category + " : " + Math.round(average[category]); });
     donut.call(tool_tip);
 
@@ -407,7 +406,6 @@ function onload(){
           })
           .each(function(d) { this._current = d; })
           .attr("transform", "translate(" + width / x + "," + height / y + ")");
-
 
     // Add datapoint in the middle of the donut
     donut.append("text")
