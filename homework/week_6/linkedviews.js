@@ -21,7 +21,7 @@ function onload(){
               })
 
   // Set margin values
-  var margin = {top: 0, right: 20, bottom: 0, left: 130},
+  var margin = {top: 0, right: 20, bottom: 0, left: 200},
               width = 800 + margin.left + margin.right,
               height = 680 - margin.top - margin.bottom,
               min = 10;
