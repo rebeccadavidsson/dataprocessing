@@ -1,16 +1,111 @@
 <!DOCTYPE html>
+<!-- Template by html.am -->
 <html>
-<body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>2 Column Layout &mdash; Left Menu with Header &amp; Footer</title>
+		<style type="text/css">
 
-<p>Name: Rebecca Davidsson</p>
-<p>Student number: 11252138</p>
-<p>Course: Data processing 2018</p>
-<p></p>
-<p>Link to the assignments:</p>
+			body {
+				margin:0;
+				padding:0;
+				font-family: Sans-Serif;
+				line-height: 1.5em;
+        background: gold;
+			}
 
-<a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_3/index.html">Week 3</a>
-<a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_4/index.html">Week 4</a>
-<a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_5/scatter.html">Week 5</a>
-<a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_6/linkedviews.html">Week 6: Linked views</a>
-</body>
+			#header {
+				background: #ccc;
+				height: 100px;
+			}
+
+			#header h1 {
+				margin: 0;
+				padding-top: 15px;
+			}
+
+			main {
+				padding-bottom: 10810px;
+				margin-bottom: -10000px;
+				float: left;
+				width: 100%;
+			}
+
+			#nav {
+				padding-bottom: 10010px;
+				margin-bottom: -10000px;
+				float: left;
+				width: 290px;
+				margin-left: -100%;
+				background: #eee;
+			}
+
+			#wrapper {
+				overflow: hidden;
+			}
+
+			#content {
+				margin-left: 300px; /* Same as 'nav' width */
+			}
+
+			.innertube {
+				margin: 15px; /* Padding for content */
+				margin-top: 0;
+			}
+
+			p {
+				color: #555;
+			}
+
+			nav ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			nav ul a {
+				color: darkgreen;
+				text-decoration: none;
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<header id="header">
+			<div class="innertube">
+				<h1>Data processing assignments</h1>
+			</div>
+		</header>
+
+		<div id="wrapper">
+
+			<main>
+				<div id="content">
+					<div class="innertube">
+						<h1>Links to the assignments</h1>
+						<p><script>generateText(20)</script></p>
+            <p><a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_3/index.html">Week 3</a></p>
+            <p><a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_4/index.html">Week 4</a></p>
+            <p><a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_5/scatter.html">Week 5</a></p>
+            <p><a href="https://rebeccadavidsson.github.io/dataprocessing/homework/week_6/linkedviews.html">Week 6: Linked views</a></p>
+					</div>
+				</div>
+			</main>
+
+			<nav id="nav">
+				<div class="innertube">
+					<h3>Info</h3>
+					<ul>
+						<li><p>Name: Rebecca Davidsson</p></li>
+						<li><p>Student number: 11252138</p></li>
+						<li><p>Course: Data processing 2018</p></li>
+				</div>
+			</nav>
+
+		</div>
+
+	</body>
 </html>

@@ -55,7 +55,7 @@ Promise.all(requests).then(function(response) {
   // Add a text label for the x-axis
   svg.append("text")
       .attr("class", "text")
-      .attr("transform","translate(400,390)") // NIGEL: HOE KAN IK HIER VARIABELEN INSTOPPEN
+      .attr("transform","translate(400,390)")
       .style("text-anchor", "middle")
       .text("Women researchers as a percentage of total researchers (headcount)")
 

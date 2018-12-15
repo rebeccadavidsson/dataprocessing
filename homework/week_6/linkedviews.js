@@ -51,13 +51,14 @@ function onload(){
 
   svg.call(tip);
 
-  // Queue to request both queries and wait until all requests are fulfilled
+  // Queue to request both files and wait until all requests are fulfilled
   var requests = [d3.json("world_countries.json"), d3.tsv("hpiDict.tsv")];
 
   Promise.all(requests).then(function(response) {
     ready(response);
-  }).catch(function(e){
-      throw(e);
+    // Catch errors
+    }).catch(function(e){
+        throw(e);
   });
 
   function ready(d){
@@ -69,9 +70,7 @@ function onload(){
 
     // Make a dictionary of all categories
     hpi.forEach(function(d) { hpiDict[d.name] = ({"Wellbeing" : parseFloat(d["Wellbeing"]),
-                                    "Life Expectancy" : parseFloat(d["Life Expectancy"]),
                                     "Inequality" : parseFloat(d["Inequality"]),
-                                    "Ecological Footprint" : parseFloat(d["Ecological Footprint"]),
                                     "HPI" : parseFloat(d["HPI"])}) ; });
 
     hpi.forEach(function(d) { hpiById[d.id] = +d["HPI"] ; });
@@ -133,12 +132,13 @@ function onload(){
               update(d.properties.name, "Inequality", hpiDict)
               update(d.properties.name, "Wellbeing", hpiDict);
             }
+            // Update to 'unkown' when country has no data
             catch(err) {
               d3.selectAll("#countryname").remove()
               addCountryName("Uknown HPI")
-              d3.selectAll("#HPI").style("fill-opacity", 0)
-              d3.selectAll("#Inequality").style("fill-opacity", 0)
-              d3.selectAll("#Wellbeing").style("fill-opacity", 0)
+              d3.selectAll("#HPI").style("fill-opacity", 0.4)
+              d3.selectAll("#Inequality").style("fill-opacity", 0.4)
+              d3.selectAll("#Wellbeing").style("fill-opacity", 0.4)
             }
           });
 
@@ -148,7 +148,7 @@ function onload(){
         .attr("d", path);
 
     function addCountryName(country) {
-    // Add name currently displayed country
+    // Add name of currently displayed country
     var countryname = d3.select("#world")
                         .append("svg")
                         .attr('y', 50)
@@ -167,23 +167,18 @@ function onload(){
     Makes the 3 donuts when html is opened.
     */
     function makeInitialDonuts(country) {
-
     drawDonut(country, hpiDict, "HPI", "firebrick", calcAverage("HPI", hpiDict))
     drawDonut(country, hpiDict, "Inequality", "crimson", calcAverage("Inequality", hpiDict))
     drawDonut(country, hpiDict, "Wellbeing", "palevioletred", calcAverage("Wellbeing", hpiDict))
-
     // Add the name of currently displayed country
     addCountryName(country)
-
-    }
     // Start with data of the Finland when html is opened :-)
-    makeInitialDonuts("Finland")
+    }makeInitialDonuts("Finland")
 
     /*
     Updates the three donuts when user clicks on a country.
     */
     function update(country, category, data){
-
 
       // Set margin values
       var margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -203,19 +198,16 @@ function onload(){
       else if (category == "HPI") {
         var max = 100
         var col = "firebrick"
-      }else if (category == "Inequality"){
+      }else {
         max = 100
         var col = "crimson"
-      }
-      else if (category == "Life Expectancy"){
-        max = 100
-        var col = "lightcoral"
       }
 
       var color = d3.scaleLinear()
               .domain([0,1])
               .range([col, "#E5E4E4"])
 
+      // Update dataset to selected country
       var dataset = data[country][category]
       data = [dataset, max - dataset]
 
@@ -230,6 +222,7 @@ function onload(){
       var donut = d3.selectAll("#" + category)
                     .style("fill-opacity", 1)
 
+      // Draw the text in the inner circle
       donut.append("text")
             .attr("id", "innerText" + category)
         	   .attr("text-anchor", "middle")
@@ -259,19 +252,18 @@ function onload(){
             .each(function(d) { this._current = d; })
             .attr("transform", "translate(" + width / x + "," + height / y + ")");
       }
-
     }
 
     /*
     Draw a legend with colors corresponding to the world map.
     */
     function makeLegend() {
-
       var defs = svg.append("defs");
 
       var linearGradient = defs.append("linearGradient")
                                 .attr("id", "linear-gradient");
 
+      // Define color gradiënt
       linearGradient
           .attr("x1", "0%")
           .attr("y1", "0%")
@@ -280,7 +272,7 @@ function onload(){
 
       linearGradient.selectAll("stop")
           .data([
-            {offset: "0%", color: color(40)},
+            {offset: "0%", color: color(42)},
             {offset: "25%", color: color(32)},
             {offset: "50%", color: color(26)},
             {offset: "75%", color: color(19)},
@@ -294,6 +286,7 @@ function onload(){
             return d.color;
           });
 
+      // Append legend rectangle and fill with gradiënt color
       var legend = svg.append("rect")
               .attr("width", legendWidth)
               .attr("height", height - 100)
@@ -308,7 +301,7 @@ function onload(){
               .scale(y)
               .ticks(5);
 
-      // Add axis
+      // Add legened axis
       svg.append("g")
               .attr("class", "yAxis")
               .attr("transform", "translate(50,80)")
@@ -330,6 +323,7 @@ function onload(){
       svg.append("text")
               .attr("transform", "translate(80,65)")
               .text("Unkown HPI")
+
     }makeLegend()
   }drawmap()
 
@@ -347,11 +341,8 @@ function onload(){
       max = 100
     }
 
-    var x = 3;
-    var y = 2;
-
+    // Update data to selected country
     var dataset = data[country][category]
-
     data = [dataset, max - dataset]
 
     var color = d3.scaleLinear()
@@ -364,8 +355,11 @@ function onload(){
                 height = 230 - margin.top - margin.bottom,
                 padding = 50,
                 outerRadius = 60,
-                innerRadius = 50;
+                innerRadius = 50,
+                x = 3,
+                y = 2;
 
+    // Append new svg element
     var donut = d3.select("body")
                 .append("svg")
                 .attr("id", category)
@@ -375,26 +369,23 @@ function onload(){
                 .attr("height", height)
                 .attr("transform", "translate(" + 10 + "," + 10 + ")");
 
-
+    // Add a tooltip that shows the average of the hovered category
     var tool_tip = d3.tip()
             .attr("class", "average")
-            // .offset([200, -10])
             .direction('w')
             .html(function(d) { return "Average " + category + " : " + Math.round(average[category]); });
     donut.call(tool_tip);
-
     donut.on("mouseover", tool_tip.show)
             .on("mouseout", tool_tip.hide);
 
     var arc = d3.arc()
                 .innerRadius(innerRadius)
                 .outerRadius(outerRadius);
-
     var pie = d3.pie()
                 .value(function(d) { return d; })
                 .sort(null);
 
-    // Make the first circle
+    // Make the paths (circles) in the svg element(s)
     donut.selectAll("path")
           .data(pie(data))
           .enter()
@@ -417,6 +408,7 @@ function onload(){
            .attr("class", "innercircle")
       	   .text(dataset);
 
+    // Add maximum value to inner donut text
     donut.append("text")
       	   .attr("text-anchor", "middle")
       		 .attr('font-size', '4em')
