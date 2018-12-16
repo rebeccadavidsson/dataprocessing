@@ -3,7 +3,6 @@
 // Asssignment: D3 Linked views (week 6)
 
 function onload(){
-
   /*
   Draw a basic world map and give colors corresponding to
   HPI values for each country.
@@ -21,9 +20,9 @@ function onload(){
               })
 
   // Set margin values
-  var margin = {top: 0, right: 20, bottom: 0, left: 200},
-              width = 800 + margin.left + margin.right,
-              height = 680 - margin.top - margin.bottom,
+  var margin = {top: -100, right: 20, bottom: -100, left: 280},
+              width = 550 + margin.left + margin.right,
+              height = 450 - margin.top - margin.bottom,
               min = 10;
               max = 45;
               legendWidth = 20;
@@ -38,13 +37,13 @@ function onload(){
   var svg = d3.select("body")
               .append("svg")
               .attr("width", width)
-              .attr("height", height + 200)
+              .attr("height", height + 80)
               .append('g')
               .attr("id", "world")
               .attr('class', 'map');
 
   var projection = d3.geoMercator()
-                     .scale(140)
+                     .scale(120)
                     .translate( [width / 2, height / 1.5]);
 
   var path = d3.geoPath().projection(projection);
@@ -211,6 +210,65 @@ function onload(){
     addCountryName(country)
     // Start with data of the USA when html is opened
     }makeInitialDonuts("USA")
+
+    // Add story of HPI (scroll down page to see)
+    var backgroundStory = d3.select("body")
+                .append("svg")
+                .attr("id", "background")
+                .attr("class", "background")
+                .attr("height", 600)
+                .style("fill", "black")
+                .append('g');
+
+    backgroundStory.append("rect")
+                    .attr("x", 500)
+                    .attr("y", 100)
+                    .attr("width", 2)
+                    .attr("height", 400)
+                    .attr("fill", "grey")
+    // Add text
+    backgroundStory.append("text")
+                    .attr("x", 100)
+                    .attr("y", 200)
+                    .text("The Happy Planet Index")
+                    .attr("fill", "white")
+                    .attr("font-size", "30px")
+
+    // Add bulletpoints
+    backgroundStory.append("text")
+                    .attr("x", 550)
+                    .attr("y", 200)
+                    .html("The Happy Planet Index is calculated with:")
+                    .attr("fill", "white")
+                    .attr("font-size", "24px");
+                    backgroundStory
+                    .append("text")
+                    .attr("x", 570)
+                    .attr("y", 250)
+                    .html("* Wellbeing")
+                    .attr("fill", "white")
+                    .attr("font-size", "20px");
+                    backgroundStory
+                    .append("text")
+                    .attr("x", 570)
+                    .attr("y", 300)
+                    .html("* Life expency")
+                    .attr("fill", "white")
+                    .attr("font-size", "20px");
+                    backgroundStory
+                    .append("text")
+                    .attr("x", 570)
+                    .attr("y", 350)
+                    .html("* Inequality of outcomes")
+                    .attr("fill", "white")
+                    .attr("font-size", "20px")
+                    backgroundStory
+                    .append("text")
+                    .attr("x", 570)
+                    .attr("y", 400)
+                    .html("* Ecological footprint")
+                    .attr("fill", "white")
+                    .attr("font-size", "20px")
 
     /*
     Updates the three donuts when user clicks on a country.
@@ -469,11 +527,26 @@ function onload(){
     .append("footer")
     .attr("class", "footer2")
     .attr("id", "footer2")
-    .html("The Happy Planet Index (HPI) indicates how well a country is doing. \
-          The HPI is based on country wellbeing, life expectancy, inequality of \
-          outcomes and ecological footprint.")
     .append("footer")
     .attr("class", "footer3")
     .text("Choose a country to view HPI elements: ")
 
+  // Scroll down when html is opened
+  d3.select("body").transition()
+      .delay(50)
+      .duration(1000)
+      .tween("scroll", scroll(0, 360));
+  d3.select("body").transition()
+      .delay(1200)
+      .duration(900)
+      .tween("scroll", scroll(360, 0));
+
+  function scroll(min, max) {
+      return function () {
+          var i = d3.interpolateNumber(min, max);
+          return function (t) {
+              scrollTo(0, i(t));
+          };
+      };
+  }
 }

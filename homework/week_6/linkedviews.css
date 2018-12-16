@@ -8,6 +8,11 @@ body {
   background-color: #efefef;
 }
 
+.background {
+  background-color: rgb(48,48,48);
+  width: 100%;
+}
+
 .head {
   text-align: center;
   font-size: 30px;
