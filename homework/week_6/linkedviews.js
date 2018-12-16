@@ -52,7 +52,7 @@ function onload(){
   svg.call(tip);
 
   // Queue to request both files and wait until all requests are fulfilled
-  var requests = [d3.json("world_countries.json"), d3.tsv("hpiDict.tsv")];
+  var requests = [d3.json("world_countries.json"), d3.tsv("hpiDictTSV.txt")];
 
   Promise.all(requests).then(function(response) {
     ready(response);
@@ -76,6 +76,8 @@ function onload(){
     hpi.forEach(function(d) { hpiById[d.id] = +d["HPI"] ; });
     data.features.forEach(function(d) { d.hpi = hpiById[d.id] });
 
+    hpi.forEach(function(d) { console.log(d.name); });
+
     /*
     Calculate the average of a given category.
     */
@@ -95,7 +97,7 @@ function onload(){
       return averagesDict
     }
 
-    // Make the world :-)
+    // Make the world! :-)
     // SOURCE: http://bl.ocks.org/micahstubbs/8e15870eb432a21f0bc4d3d527b2d14f
     svg.append("g")
         .attr("id", "world")
@@ -147,6 +149,42 @@ function onload(){
         .attr("class", "names")
         .attr("d", path);
 
+    // Create a dropdown
+    var dropDown = d3.select("#footer2")
+
+    // Append options to the drop-down menu
+    dropDown.append("select")
+        		.selectAll("option")
+            .data(hpi)
+                .enter()
+                .append("option")
+                .attr("value", function(d){
+                    return d.name;
+                })
+                .text(function(d){
+                    return d.name;
+                });
+
+      // Run update function with selected country
+   	  dropDown.on('change', function(){
+   		var selectedCountry = d3.select(this)
+              .select("select")
+              .property("value")
+              try {
+                update(selectedCountry, "HPI", hpiDict)
+                update(selectedCountry, "Inequality", hpiDict)
+                update(selectedCountry, "Wellbeing", hpiDict);
+              }
+              // Update to 'unkown' when country has no data
+              catch(err) {
+                d3.selectAll("#countryname").remove()
+                addCountryName("Uknown HPI")
+                d3.selectAll("#HPI").style("fill-opacity", 0.4)
+                d3.selectAll("#Inequality").style("fill-opacity", 0.4)
+                d3.selectAll("#Wellbeing").style("fill-opacity", 0.4)
+              }
+      });
+
     function addCountryName(country) {
     // Add name of currently displayed country
     var countryname = d3.select("#world")
@@ -169,11 +207,12 @@ function onload(){
     function makeInitialDonuts(country) {
     drawDonut(country, hpiDict, "HPI", "firebrick", calcAverage("HPI", hpiDict))
     drawDonut(country, hpiDict, "Inequality", "crimson", calcAverage("Inequality", hpiDict))
-    drawDonut(country, hpiDict, "Wellbeing", "palevioletred", calcAverage("Wellbeing", hpiDict))
+    drawDonut(country, hpiDict, "Wellbeing", "palevioletred",
+              calcAverage("Wellbeing", hpiDict))
     // Add the name of currently displayed country
     addCountryName(country)
-    // Start with data of the Finland when html is opened :-)
-    }makeInitialDonuts("Finland")
+    // Start with data of the USA when html is opened
+    }makeInitialDonuts("USA")
 
     /*
     Updates the three donuts when user clicks on a country.
@@ -373,7 +412,8 @@ function onload(){
     var tool_tip = d3.tip()
             .attr("class", "average")
             .direction('w')
-            .html(function(d) { return "Average " + category + " : " + Math.round(average[category]); });
+            .html(function(d) { return "Average " + category +
+                  " : " + Math.round(average[category]); });
     donut.call(tool_tip);
     donut.on("mouseover", tool_tip.show)
             .on("mouseout", tool_tip.hide);
@@ -424,13 +464,18 @@ function onload(){
             .attr('x', width / x)
             .attr("class", "cirlcetitle")
        	   .text(category);
-
   }
 
   // Add (real) footer
   d3.selectAll("body")
     .append("footer")
     .attr("class", "footer2")
-    .append("text")
-    .text("Week 6: Linked Views, Data Processing 2018")
+    .attr("id", "footer2")
+    .html("The Happy Planet Index (HPI) indicates how well a country is doing. \
+          The HPI is based on country wellbeing, life expectancy, inequality of \
+          outcomes and ecological footprint.")
+    .append("footer")
+    .attr("class", "footer3")
+    .text("Choose a country to view HPI elements: ")
+
 }
