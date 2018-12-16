@@ -76,8 +76,6 @@ function onload(){
     hpi.forEach(function(d) { hpiById[d.id] = +d["HPI"] ; });
     data.features.forEach(function(d) { d.hpi = hpiById[d.id] });
 
-    hpi.forEach(function(d) { console.log(d.name); });
-
     /*
     Calculate the average of a given category.
     */
